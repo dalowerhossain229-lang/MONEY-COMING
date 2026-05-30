@@ -80,7 +80,7 @@
         </div>
     </div>
 
-    <!-- 🔌 [উইনগো কালার ট্রেড সিঙ্ক - ইউনিভার্সাল সকেট ইঞ্জিন লাইব্রেরি ভাই] -->
+        <!-- 🔌 [উইনগো কালার ট্রেড সিঙ্ক - ইউনিভার্সাল সকেট ইঞ্জিন লাইব্রেরি এবং ডাইনামিক বেট ম্যাট্রিক্স বর্ম ভাই ভাই] -->
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
@@ -96,24 +96,43 @@
         let isMuted = false;
         let autoInterval = null;
 
-        // ৩+১ রিলস ওরিজিনাল সাইকেল ট্রিপ ডাটা ম্যাপ চাবি
-        const reelSymbolsMap = {
+        // 🚀 [ডাইনামিক বেট রিল ম্যাপ]: বেট অনুযায়ী রিলের ভেতর মেগা সংখ্যার চান্স বুস্ট করার লাইভ ভেরিয়েবল ভাই ভাই
+        let reelSymbolsMap = {
             0: ["0", "1", "5", "0", "1", "5"],
             1: ["0", "5", "00", "0", "5", "00"],
             2: ["0", "0", "5", "0", "0", "5"],
             3: ["x1", "x2", "x5", "x1", "x2", "x5"]
         };
 
+        // 🧠 [মেগা রিল নাম্বার চেইঞ্জার লুপ]: বেট বাড়লে ১ম ৩ কলামে বড় সংখ্যার (5, 00) ওডস ডাইনামিক্যালি বাড়িয়ে দেওয়ার চাবি
+        function updateDynamicReelMatrixPool(betAmount) {
+            if (betAmount >= 1000) {
+                // 💎 মেগা ভিআইপি বাজি (৳১০০০+): রিল ২ ও ৩-এ বড় জিরো এবং মেগা ফাইভের চান্স এক টানে ডাবল লক ভাই ভাই!
+                reelSymbolsMap[0] = ["1", "5", "1", "5", "5", "5"];
+                reelSymbolsMap[1] = ["5", "00", "5", "00", "00", "5"];
+                reelSymbolsMap[2] = ["0", "5", "5", "0", "5", "5"];
+            } else if (betAmount >= 500) {
+                // 🔥 হাই-রোলার বাজি (৳৫০০ - ৳৯৯৯)
+                reelSymbolsMap[0] = ["0", "1", "5", "1", "5", "5"];
+                reelSymbolsMap[1] = ["0", "5", "00", "5", "00", "0"];
+                reelSymbolsMap[2] = ["0", "0", "5", "5", "0", "5"];
+            } else {
+                // 🍃 নরমাল বেস বাজি (৳১ - ৳৪৯৯)
+                reelSymbolsMap[0] = ["0", "1", "5", "0", "1", "5"];
+                reelSymbolsMap[1] = ["0", "5", "00", "0", "5", "00"];
+                reelSymbolsMap[2] = ["0", "0", "5", "0", "0", "5"];
+            }
+        }
+
         // 🧠 [১ শতভাগ একুরেট ৩+১ রিলস ক্যাসিনো স্পিনিং অ্যানিমেশন ইঞ্জিন ভাই ভাই]
         function animateMoneyComingReels(serverReelsData, finalStatus, winAmount) {
-            const delayBetweenReels = 200; 
             let completedReelsCount = 0;
 
             for (let i = 0; i < 4; i++) {
                 const strip = document.getElementById(`strip-${i}`);
                 const finalSymbol = serverReelsData[i];
                 
-                // রিল হাই-স্পিড স্পিনিং ব্লার মোশন ক্লাস পুশ ভাই ভাই
+                // রিল হাই-স্পিড স্পিনিং ক্লাস পুশ ভাই ভাই
                 strip.className = "reel-strip reel-blur-spinning-fast";
                 
                 let rollCounter = 0;
@@ -121,7 +140,7 @@
                     const tempPool = reelSymbolsMap[i];
                     const randomSymbol = tempPool[Math.floor(Math.random() * tempPool.length)];
                     
-                    strip.innerHTML = `<div class="slot-symbol ${i===3?'symbol-gold':''}">制造${randomSymbol}</div>`;
+                    strip.innerHTML = `<div class="slot-symbol ${i===3?'symbol-gold':''}">${randomSymbol}</div>`;
                     rollCounter++;
 
                     // প্রতি রিলের জন্য কাস্টম স্টপ টাইমার বাফার লক ভাই ভাই
@@ -171,7 +190,6 @@
                     if (window.parent) window.parent.postMessage({ action: "refresh_wallet" }, "*");
                     if (window.top) window.top.postMessage({ action: "refresh_wallet" }, "*");
 
-                    // সার্ভার ডাটা আসার পর লাইভ এনিমেশন লুপ ফায়ার লক ভাই ভাই
                     animateMoneyComingReels(data.reels, data.status, data.winAmount);
                 } else {
                     alert(data.message || "❌ Insufficient Balance! Please Recharge.");
@@ -228,9 +246,10 @@
             } catch (e) { console.error("Balance query pass"); }
         }
 
-                window.onload = () => {
+        window.onload = () => {
             if (window.parent) window.parent.postMessage({ action: "refresh_wallet" }, "*");
             fetchLiveBalance();
+            updateDynamicReelMatrixPool(currentBet); // শুরুর ডিফল্ট বেট পুল লোড ভাই ভাই
         };
 
         function adjustBet(action) {
@@ -251,6 +270,10 @@
             if (currentBet > 20000) currentBet = 20000;
             
             document.getElementById("bet-display").innerText = `৳${currentBet}`;
+            
+            // 🚀 [মাস্টার প্লাগইন]: বাজি পরিবর্তনের সাথে সাথে ব্যাকগ্রাউন্ডে রিলের ম্যাট্রিক্স সংখ্যা সাথে সাথে চেঞ্জ লক!
+            updateDynamicReelMatrixPool(currentBet);
+            
             playAudio('click');
         }
 
@@ -277,7 +300,7 @@
             if (!isAuto && autoInterval) clearTimeout(autoInterval);
         }
 
-        // 🎯 [৪টি ওরিজিনাল প্রফেশনাল স্লট সাউন্ড ও বাফার গেটওয়ে লক ভাই ভাই]
+                // 🎯 [৪টি ওরিজিনাল প্রফেশনাল স্লট সাউন্ড ও বাফার গেটওয়ে লক ভাই ভাই]
         const slotSounds = {
             click: new Audio('click2.mp3'),
             spin: new Audio('spin2.mp3'),
@@ -296,5 +319,4 @@
     </script>
 </body>
 </html>
-
 
