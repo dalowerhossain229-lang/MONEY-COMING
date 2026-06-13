@@ -307,3 +307,14 @@ body {
     from { transform: scale(0.5); opacity: 0; } 
     to { transform: scale(1); opacity: 1; } 
 }
+/* 🎯 [🔒 ওস্তাদ! অন্য গেমের ওরিজিনাল 'user-balance' আইডি কন্টেইনার জোরালোভাবে স্ক্রিনে ফুটিয়ে তোলার কিংস বর্ম লক 🔒] */
+#user-balance, .jili-balance-box span {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: #00ff66 !important; /* 👈 ওস্তাদ! এক্কেবারে জেনুইন লাক্সারি গ্লোয়িং নিয়ন গ্রিন কালার লক! */
+    font-family: monospace !important;
+    font-size: 15px !important;
+    font-weight: 950 !important;
+    text-shadow: 0 0 12px rgba(0, 255, 102, 0.6), 0 2px 4px #000000 !important;
+}
