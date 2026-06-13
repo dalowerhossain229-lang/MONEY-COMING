@@ -111,16 +111,31 @@
     const urlUserId = urlParams.get('userId') || urlParams.get('id') || urlParams.get('username') || "guest_user";
     const urlWallet = urlParams.get('wallet') || "main";
 
-    // 🔌 লাইভ ব্যালেন্স ওতো-লোড গেটওয়ে
+    // 🚀 [🔒 গেম এরিনায় প্রবেশ করার ১ মিলি-সেকেন্ডে মেইন ব্যালেন্স ওতো-টেনে লোড করার জাদুকরী কিংস ড্রাইভার লক 🔒]
     async function loadPlatformLiveBalanceSync() {
         try {
-            const res = await fetch(`${SERVER_URL}/api/jili-balance?userId=${urlUserId}&wallet=${urlWallet}`);
+            // 🎯 ইউজারনেম প্যারামিটার ট্র্যাপ বাইপাস করতে ডাইনামিক সিঙ্ক মেকার ভাই ভাই
+            let targetUser = urlUserId;
+            if (!targetUser || targetUser === "guest_user") {
+                // অল্টারনেট প্যারামিটার ব্যাকআপ চেকিং ভাই ভাই
+                targetUser = urlParams.get('username') || urlParams.get('id') || "guest_user";
+            }
+
+            const res = await fetch(`${SERVER_URL}/api/jili-balance?userId=${targetUser}&wallet=${urlWallet}`);
             const data = await res.json();
+            
             if (data && data.success) {
                 livePlatformBalance = parseFloat(data.balance);
-                document.getElementById("jili-wallet-balance").innerText = livePlatformBalance.toLocaleString('en-US', {minimumFractionDigits: 2});
+                
+                // আপনার স্ক্রিনশটের অবিকল গোল্ডেন ওয়ালেট বক্সে টাকা লাইভ ওতো-লোড ফায়ার ভাই!
+                const balanceDisplayNode = document.getElementById("jili-wallet-balance");
+                if (balanceDisplayNode) {
+                    balanceDisplayNode.innerText = livePlatformBalance.toLocaleString('en-US', {minimumFractionDigits: 2});
+                }
             }
-        } catch(e) {}
+        } catch(e) {
+            console.error("Front-end Balance Sync Error:", e);
+        }
     }
 
     function adjustJiliBet(action) {
