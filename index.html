@@ -112,24 +112,73 @@
     const urlUserId = urlParams.get('userId') || urlParams.get('id') || urlParams.get('username') || "guest_user";
     const urlWallet = urlParams.get('wallet') || "main";
 
-    // 🚀 [🔒 ওস্তাদ! অন্য গেমের অবিকল ১০০% সচল ওরিじんাল ব্যালেন্স ড্রাইভার প্রোটোকল লক 🔒]
+        // 🚀 [🔒 ওস্তাদ! আইফ্রেম প্যারামিটার লস প্রোটেকশন ও ব্যালেন্স ১ শতভাগ ওতো-টেনে আনার সুপ্রীম কিংস বর্ম লক 🔒]
     async function fetchLiveBalance() {
         try {
-            const response = await fetch(`${SERVER_URL}/api/rainbow-balance?userId=${urlUserId}&wallet=${urlWallet}`);
+            // ১. মেইন ড্যাশবোর্ড আইফ্রেমের সমস্ত সম্ভাব্য আইডি প্যারামিটার এক টানে ক্যাচ লক ভাই!
+            let targetUser = urlParams.get('userId') || urlParams.get('username') || urlParams.get('id') || urlParams.get('user');
+            let targetWallet = urlParams.get('wallet') || "main";
+
+            // 🚨 [মেগা কিলার কিংস ফিক্স]: যদি আইফ্রেম লিংক কেটে আইডি গায়েবও হয়ে যায়, প্যারেন্ট ড্যাশবোর্ড স্ক্রিন থেকে আইডি ফোর্সড রিড করার ফর্মুলা!
+            if (!targetUser || targetUser === "guest_user") {
+                try {
+                    if (window.parent && window.parent.location && window.parent.location.search) {
+                        const parentParams = new URLSearchParams(window.parent.location.search);
+                        targetUser = parentParams.get('userId') || parentParams.get('username') || parentParams.get('id') || parentParams.get('user');
+                        targetWallet = parentParams.get('wallet') || "main";
+                    }
+                } catch (parentErr) {
+                    // ক্রস-ওরিজিন বাউণ্ডারি থাকলে অল্টারনেট ডকুমেন্ট রেফ ট্র্যাকার সিঙ্ক ভাই ভাই
+                    if (document.referrer) {
+                        const refUrl = new URL(document.referrer);
+                        const refParams = new URLSearchParams(refUrl.search);
+                        targetUser = refParams.get('userId') || refParams.get('username') || refParams.get('id');
+                        targetWallet = refParams.get('wallet') || "main";
+                    }
+                }
+            }
+
+            // যদি তাও না পায় তবে সেফটি ব্যাকআপ গ্লোবাল লোকালস্টোরেজ মেমোরি সিঙ্ক ভাই ভাই
+            if (!targetUser || targetUser === "guest_user") targetUser = localStorage.getItem('activeJiliUser') || "guest_user";
+            if (targetUser && targetUser !== "guest_user") localStorage.setItem('activeJiliUser', targetUser);
+
+            // ২. ওস্তাদ! আপনার অন্য গেমের অবিকল ওরিজিনাল রাউট ব্যাকএ্যান্ডে হিট ফায়ার!
+            const response = await fetch(`${SERVER_URL}/api/rainbow-balance?userId=${targetUser}&wallet=${targetWallet}`);
             const data = await response.json();
             if (data && data.success) {
                 livePlatformBalance = parseFloat(data.balance);
                 
-                // জিলির ভেতরের গোল্ডেন ওয়ালেট বক্সে টাকা ওতো-লোড ফায়ার ভাই ভাই!
+                // জিলির গোল্ডেন ওয়ালেট ডিসপ্লে বক্সে টাকা রিয়েল-টাইমে ওতো-লোড ফায়ার ভাই ভাই!
                 const balanceDisplay = document.getElementById("user-balance");
                 if (balanceDisplay) {
                     balanceDisplay.innerText = livePlatformBalance.toFixed(2);
                 }
             }
         } catch (e) { 
-            console.error("Balance fetch delay"); 
+            console.error("Balance fetch delay bypass handler active"); 
         }
     }
+
+    // সকেট লাইভ অ্যাকাউন্ট রিফ্রেশার সিঙ্ক পাইপ (ব্যালেন্স আপডেট হলে ওতো-টেনে আনবে ভাই)
+    if (typeof io !== 'undefined') {
+        socket.on('balanceUpdate', (data) => {
+            let currentActiveUser = urlUserId || localStorage.getItem('activeJiliUser');
+            if (data && data.username === currentActiveUser) {
+                livePlatformBalance = parseFloat(data.balance);
+                const balanceDisplay = document.getElementById("user-balance");
+                if (balanceDisplay) balanceDisplay.innerText = livePlatformBalance.toFixed(2);
+            }
+        });
+    }
+
+    // ফার্স্ট টাইম এরিনা বুট সিঙ্ক (পেজ লোড হওয়ার সাথে সাথে ৩ বার ওতো-রিফ্রেশ ফায়ার যাতে জ্যাম না লাগে)
+    window.onload = () => {
+        if (window.parent) window.parent.postMessage({ action: "refresh_wallet" }, "*");
+        fetchLiveBalance();
+        setTimeout(fetchLiveBalance, 300);
+        setTimeout(fetchLiveBalance, 800);
+    };
+
 
     function adjustJiliBet(action) {
         if (isReelsSpinning) return;
