@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>JILI Money Coming - VIP CASINO PREMIUM</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="jili-money-stadium">
+    
+    <!-- 👑 ওপরের ডিসপ্লে বার (অন্য গেমের অবিকল ব্যালেন্স বর্ম) -->
+    <div class="jili-navbar">
+        <div class="jili-back-btn" onclick="if(window.parent) window.parent.postMessage({action:'go_lobby'}, '*')">◀ LOBBY</div>
+        <div class="jili-brand-logo">JILI MONEY COMING</div>
+        <button class="sound-btn" id="mute-btn" onclick="toggleMute()" style="background: #1f1107; border: 1px solid #5a2c06; color: #ffaa00; padding: 4px 8px; border-radius: 4px; font-size: 12px; cursor: pointer; font-weight: bold;">🔊</button>
+        <!-- 🎯 ওস্তাদ! কিলার ফিক্স— can't block! আপনার অন্য সচল গেমের ওরিজিনাল ওয়ালেট ডিসপ্লে আইডি 'user-balance' এখানে ১০০% কড়া লক! -->
+        <div class="jili-balance-box">৳ <span id="user-balance">0.00</span></div>
+    </div>
+
+    <!-- 🎰 [🔒 জিলির অবিকল ৩+১ লাক্সারি ক্যাসিনো রিল ক্যানভাস কাঠামো কড়া লক 🔒] -->
+    <div class="reels-main-wrapper">
+        <div class="winning-payline-laser"></div> <!-- মেইন মাঝখানের লাল উইন লাইন সিঙ্ক ভাই -->
+        
+        <!-- রিল ১ (মেইন মানি নোড) -->
+        <div class="reel-container">
+            <div class="reel-strip" id="reel-1">
+                <div class="reel-cell">0</div>
+                <div class="reel-cell">1</div>
+                <div class="reel-cell">5</div>
+                <div class="reel-cell">10</div>
+            </div>
+        </div>
+
+        <!-- রিল ২ (মেইন মানি নোড) -->
+        <div class="reel-container">
+            <div class="reel-strip" id="reel-2">
+                <div class="reel-cell">0</div>
+                <div class="reel-cell">00</div>
+                <div class="reel-cell">1</div>
+                <div class="reel-cell">5</div>
+            </div>
+        </div>
+
+        <!-- রিল ৩ (মেইন মানি নোড) -->
+        <div class="reel-container">
+            <div class="reel-strip" id="reel-3">
+                <div class="reel-cell">0</div>
+                <div class="reel-cell">1</div>
+                <div class="reel-cell">5</div>
+                <div class="reel-cell">0</div>
+            </div>
+        </div>
+
+        <!-- ⚡ রিল ৪ (ডানদিকের বিশেষ মেগা বুস্টার উইন রিল) ⚡ -->
+        <div class="reel-container special-booster-reel">
+            <div class="reel-strip" id="reel-4">
+                <div class="reel-cell multiplier-cell">X2</div>
+                <div class="reel-cell free-spin-cell">FREE SPIN</div>
+                <div class="reel-cell multiplier-cell">X5</div>
+                <div class="reel-cell joker-cell">JOKER</div>
+                <div class="reel-cell multiplier-cell">X10</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🏆 [উইন পপআপ মডাল বক্স এরিয়া ভাই ভাই] -->
+    <div id="jili-win-overlay" class="jili-win-popup-overlay">
+        <div class="jili-win-popup-box">
+            <div class="jili-popup-title" id="jili-popup-status">BIG WIN</div>
+            <div class="jili-popup-amount" id="jili-popup-money">৳0.00</div>
+        </div>
+    </div>
+
+    <!-- 🎛️ নিচের মেইন বেটিং ড্যাশবোর্ড কন্ট্রোল প্যানেল -->
+    <div class="jili-control-footer">
+        
+        <!-- স্টেক ইনপুট এবং প্লাস-মাইনাস বাটন গ্রিড (অন্য গেমের স্টেপ সিঙ্ক ভাই ভাই) -->
+        <div class="jili-stake-row">
+            <button class="jili-ctrl-btn" onclick="adjustJiliBet('minus')">−</button>
+            <div class="jili-stake-display">
+                <div style="font-size: 9px; color: #aaa; font-weight: bold;">BET</div>
+                <div style="font-size: 15px; font-weight: 900; color: #fff;" id="bet-display">৳50</div>
+            </div>
+            <button class="jili-ctrl-btn" onclick="adjustJiliBet('plus')">+</button>
+        </div>
+
+        <!-- শর্টকাট স্টেক বোতাম চিপস এবং অটো বাটন পাশাপাশি লক -->
+        <div class="jili-shortcuts-bar" style="display: flex; gap: 6px; align-items: center; width: 100%;">
+            <button class="jili-short-btn" onclick="quickJiliBet(10)" style="flex: 1;">৳10</button>
+            <button class="jili-short-btn" onclick="quickJiliBet(50)" style="flex: 1;">৳50</button>
+            <button class="jili-short-btn" onclick="quickJiliBet(500)" style="flex: 1;">৳500</button>
+            <button class="jili-short-btn" onclick="quickJiliBet(2000)" style="flex: 1;">৳2000</button>
+            <button class="jili-short-btn" id="auto-btn" onclick="toggleAuto()" style="flex: 0.6; background: #1a0400; color: #ff003c; border: 1px solid #ff003c; font-size: 14px;">🔄</button>
+        </div>
+
+        <!-- 🚀 গ্র্যান্ড ক্যাসিনো SPIN ফায়ার বোতাম -->
+        <button class="jili-spin-master-btn" id="spin-btn" onclick="fireJiliMoneySpinEngine()">SPIN</button>
+    </div>
+
+</div>
+
+<!-- 📢 Sockets নেটওয়ার্ক ও অন্য গেমের ইউনিভার্সাল ওতো-ড্রাইভার স্ক্রিপ্ট লজিক -->
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlUserId = urlParams.get('userId') || urlParams.get('id') || urlParams.get('username') || "guest_user";
+    const urlWallet = urlParams.get('wallet') || "main";
+    
+    const SERVER_URL = window.location.origin;
+
+    let balance = 0.00;
+    let currentBet = 50; 
+    let isReelsSpinning = false; 
+    let isAuto = false;
+    let isMuted = false;
+    let autoInterval = null;
+
+    // 🚀 [🔒 ওস্তাদ! অন্য গেমের অবিকল ১০০% সচল ওরিজনের ব্যালেন্স ড্রাইভার প্রোটোকল লক 🔒]
+    async function fetchLiveBalance() {
+        try {
+            const response = await fetch(`${SERVER_URL}/api/rainbow-balance?userId=${urlUserId}&wallet=${urlWallet}`);
+            const data = await response.json();
+            if (data && data.success) {
+                balance = parseFloat(data.balance);
+                document.getElementById("user-balance").innerText = balance.toFixed(2);
+            }
+        } catch (e) { 
+            console.error("Balance fetch delay"); 
+        }
+    }
+
+    // 🚀 [🔒 ওস্তাদ! অন্য গেমের অবিকল ১ থেকে ২০,০০০ টাকার প্লাস-মাইনাস স্টেপ ক্যালকুলেশন প্রোটোকল লক 🔒]
+    function adjustJiliBet(action) {
+        if (isReelsSpinning) return;
+        if (action === 'minus' && currentBet > 1) {
+            if (currentBet <= 10) currentBet -= 1;
+            else if (currentBet <= 100) currentBet -= 10;
+            else if (currentBet <= 1000) currentBet -= 100;
+            else currentBet -= 500;
+        }
+        if (action === 'plus' && currentBet < 20000) {
+            if (currentBet < 10) currentBet += 1;
+            else if (currentBet < 100) currentBet += 10;
+            else if (currentBet < 1000) currentBet += 100;
+            else currentBet += 500;
+        }
+        if (currentBet < 1) currentBet = 1;
+        if (currentBet > 20000) currentBet = 20000;
+        
+        document.getElementById("bet-display").innerText = `৳${currentBet}`;
+        try { if(!isMuted) slotSounds.click.play(); } catch(e){}
+    }
+
+    function quickJiliBet(val) {
+        if (isReelsSpinning) return;
+        currentBet = parseInt(val);
+        document.getElementById("bet-display").innerText = `৳${currentBet}`;
+        try { if(!isMuted) slotSounds.click.play(); } catch(e){}
+    }
+
+    // 🚀 [জিলির ওরিজিনাল ৩+১ রিল স্পিনিং থ্রিডি মোশন অ্যালগরিদম ইঞ্জিন লক 🔒]
+    async function fireJiliMoneySpinEngine() {
+        if (isReelsSpinning || balance < currentBet) {
+            if (balance < currentBet) alert("❌ Insufficient Balance! Please Recharge.");
+            return;
+        }
+
+        try {
+            if(!isMuted) {
+                slotSounds.click.play();
+                slotSounds.spin.play();
+            }
+        } catch (e) { console.log("Autoplay audio waiting"); }
+
+        isReelsSpinning = true;
+        document.getElementById("spin-btn").disabled = true;
+        document.getElementById("spin-btn").classList.add("spinning-lock");
+        document.getElementById("spin-btn").innerText = "💥";
+
+        // ৪টি রিল স্ক্রিপ্ট সিএসএস ক্লাস দিয়ে বোঁবোঁ করে স্পিন মোশন ফায়ার ভাই ভাই!
+        for (let i = 1; i <= 4; i++) {
+            let reelNode = document.getElementById(`reel-${i}`);
+            if (reelNode) {
+                reelNode.classList.add("blur-spinning-animation");
+            }
+        }
+
+        try {
+            // 🎯 ওস্তাদ! আপনার অন্য গেমের অবিকল 'money-coming' অফিশিয়াল হোস্টিং এপিআই স্লাগে বাজি কাটকাট হিট ভাই!
+            const response = await fetch(`${SERVER_URL}/api/jili-bet`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: urlUserId,
+                    amount: parseFloat(currentBet),
+                    wallet: urlWallet
+                })
+            });
+
+            const data = await response.json();
+
+            if (data && data.success === true) {
+                balance = parseFloat(data.balance);
+                
+                if (window.parent) window.parent.postMessage({ action: "refresh_wallet" }, "*");
+                if (window.top) window.top.postMessage({ action: "refresh_wallet" }, "*");
+
+                let winDigits = data.winDigits; 
+                let boosterWin = data.booster;  
+                let totalWinCash = data.winAmount;
+
+                       // জিলির অফিশিয়াল রিল স্টপ টাইমিং সিকোয়েন্স ম্যাপিং ভাই ভাই!
+                setTimeout(() => { stopIndividualJiliReel(1, winDigits); }, 1000);
+                setTimeout(() => { stopIndividualJiliReel(2, winDigits); }, 1400);
+                setTimeout(() => { stopIndividualJiliReel(3, winDigits); }, 1800);
+                
+                setTimeout(() => { 
+                    stopIndividualJiliReel(4, boosterWin); 
+                    
+                    // 🏆 ৪ নম্বর স্পেশাল রিল থামা মাত্রই গ্র্যান্ড উইনিং পপআপ স্ক্রিনে বড় করে ফ্লাশ হবে ওস্তাদ!
+                    setTimeout(() => {
+                        triggerJiliWinPopupDisplay(totalWinCash, boosterWin, data.status);
+                        document.getElementById("user-balance").innerText = balance.toFixed(2);
+                        
+                        // বাটন আনলক মেগা বর্ম ফায়ার ভাই
+                        stopSlotState();
+
+                        if (isAuto) {
+                            autoInterval = setTimeout(() => {
+                                if (isAuto) fireJiliMoneySpinEngine();
+                            }, 2500);
+                        }
+                    }, 500);
+                }, 2200);
+
+            } else {
+                for (let i = 1; i <= 4; i++) {
+                    let reelNode = document.getElementById(`reel-${i}`);
+                    if (reelNode) reelNode.classList.remove("blur-spinning-animation");
+                }
+                alert(data.message || "❌ Insufficient Balance! Please Recharge.");
+                stopSlotState();
+            }
+        } catch (err) {
+            for (let i = 1; i <= 4; i++) {
+                let reelNode = document.getElementById(`reel-${i}`);
+                if (reelNode) reelNode.classList.remove("blur-spinning-animation");
+            }
+            alert("⚠️ সেশন আউট! আবার SPIN বোতাম চাপুন ভাই ভাই।");
+            stopSlotState();
+        }
+    }
+
+    function stopIndividualJiliReel(reelNum, winValue) {
+        let reelNode = document.getElementById(`reel-${reelNum}`);
+        if (!reelNode) return;
+        
+        reelNode.classList.remove("blur-spinning-animation");
+        
+        let cells = reelNode.querySelectorAll('.reel-cell');
+        let matchIndex = 0;
+        cells.forEach((c, idx) => {
+            if (c.innerText === String(winValue)) matchIndex = idx;
+        });
+
+        let targetOffset = -(matchIndex * 80); // প্রতিটা সেলের হাইট ৮০ পিক্সেল সিঙ্ক লক ভাই ভাই!
+        reelNode.style.transform = `translateY(${targetOffset}px)`;
+        try { if(!isMuted) slotSounds.wheel.play(); } catch(e){}
+    }
+
+    function triggerJiliWinPopupDisplay(amount, booster, status) {
+        const overlay = document.getElementById("jili-win-overlay");
+        const statusTxt = document.getElementById("jili-popup-status");
+        const moneyTxt = document.getElementById("jili-popup-money");
+
+        if (!overlay) return;
+
+        if (status === "win" && amount > 0) {
+            try { if(!isMuted) slotSounds.win.play(); } catch(e){}
+            moneyTxt.innerText = "৳" + parseFloat(amount).toFixed(2);
+            statusTxt.innerText = booster.includes("X") ? `MULTI ${booster} WIN!!` : `${booster} BONUS!!`;
+            overlay.style.display = "flex";
+            
+            setTimeout(() => { overlay.style.display = "none"; }, 1500);
+        }
+    }
+
+    function toggleMute() {
+        isMuted = !isMuted;
+        document.getElementById("mute-btn").innerText = isMuted ? "🔇" : "🔊";
+        slotSounds.click.muted = isMuted;
+        slotSounds.spin.muted = isMuted;
+        slotSounds.win.muted = isMuted;
+        slotSounds.wheel.muted = isMuted;
+    }
+
+    function toggleAuto() {
+        isAuto = !isAuto;
+        document.getElementById("auto-btn").classList.toggle("active", isAuto);
+        if (isAuto && !isReelsSpinning) fireJiliMoneySpinEngine();
+        try { if(!isMuted) slotSounds.click.play(); } catch(e){}
+    }
+
+    // 🚀 [বাটন আনলক মেগা বর্ম]: স্পিন শেষ হওয়ার পর প্রধান বোতাম ও অটো বোতাম ১০০% রিলিজ লক ভাই ভাই!
+    function stopSlotState() {
+        isReelsSpinning = false;
+        const spinBtn = document.getElementById("spin-btn");
+        if (spinBtn) {
+            spinBtn.disabled = false;
+            spinBtn.classList.remove("spinning-lock");
+            spinBtn.innerText = "SPIN";
+        }
+        if (!isAuto) {
+            if (autoInterval) clearTimeout(autoInterval);
+        }
+    }
+
+    // 🚀 [🔒 ওস্তাদ! অন্য গেমের অবিকল ১০০% খাঁটি রিয়েল-টাইম সকেট ব্যালেন্স রিফ্রেশার ইঞ্জিন লক 🔒]
+    if (typeof io !== 'undefined') {
+        const socket = io();
+        socket.on("balanceUpdate", (data) => {
+            if (data && data.username === urlUserId) {
+                if (window.parent) window.parent.postMessage({ action: "refresh_wallet" }, "*");
+                if (window.top) window.top.postMessage({ action: "refresh_wallet" }, "*");
+                fetchLiveBalance();
+            }
+        });
+    }
+
+    // 🎯 [৪টি ওরিজিনাল প্রিমিয়াম ক্যাসিনো সাউন্ড ও বাফার গেটওয়ে লক ভাই ভাই]
+    const slotSounds = {
+        click: new Audio('click2.mp3'),
+        spin: new Audio('spin2.mp3'),
+        win: new Audio('win2.mp3'),
+        wheel: new Audio('wheel1.mp3')
+    };
+    Object.values(slotSounds).forEach(s => s.load());
+
+    // ওতো-বুটস্ট্র্যাপ মেমোরি ইন্টারফেস বুট সিঙ্ক
+    window.onload = () => {
+        if (window.parent) window.parent.postMessage({ action: "refresh_wallet" }, "*");
+        fetchLiveBalance();
+        setTimeout(fetchLiveBalance, 400);
+        setTimeout(fetchLiveBalance, 900);
+    };
+</script>
+</body>
+</html>
+         
