@@ -55,7 +55,7 @@ app.get('/api/rainbow-balance', async (req, res) => {
     }
 });
 
-// 🛫 ২. জিলি মানি স্পিন ব্যালেন্স কাটার ও ওতো-রেজাল্ট জেনারেশন মেগা এপিআই রাউট (POST Route - ৯৫% RTP গাণিতিক বর্ম কড়া লক ভাই ভাই!)
+  // 🛫 ২. জিলি মানি স্পিন ব্যালেন্স কাটার ও ওতো-রেজাল্ট জেনারেশন মেগা এপিআই রাউট (POST Route - ৯৫% RTP গাণিতিক বর্ম কঠোর লক ভাই ভাই!)
 app.post('/api/jili-bet', async (req, res) => {
     const { userId, amount, wallet } = req.body;
     const targetWallet = wallet || "main";
@@ -63,11 +63,11 @@ app.post('/api/jili-bet', async (req, res) => {
 
     // 🔒 সর্বোচ্চ ২০০০০ বিডিটি পর্যন্ত কড়া বেট সিকিউরিটি ফিল্টার লক ভাই ভাই
     if (reqAmount < 1 || reqAmount > 20000) {
-        return res.json({ success: false, message: "🚨 Invalid Bet Amount (৳১ - ৳২০০০০)" });
+        return res.json({ success: false, message: "🚨 Invalid Bet Amount (৳১ - ৳introduced)" });
     }
 
     try {
-        // 🔒 [ব্যালেন্স যাচাই]: বাজি ধরার আগে প্লেয়ারের একাউন্টের রিয়েল টাকা নিশ্চিত করা ভাই ভাই
+        // 🔒 [ব্যালেন্স যাচাই]: বাজি ধরার আগে প্লেয়ারের একাউন্টের রিয়েল টাকা নিশ্চিত করা ভাই ভাই (রেনবো ট্রিক সিঙ্ক)
         const balResponse = await axios.post(`${MAIN_SITE_URL}/api_callback.php`, {
             action: "bet",
             username: userId,
@@ -91,68 +91,69 @@ app.post('/api/jili-bet', async (req, res) => {
         // এডমিন ট্রিপল উইন-লস কন্ট্রোল ইন্টারফেস ট্র্যাকার সিঙ্ক
         let adminTriggeredPrize = (balResponse.data && balResponse.data.rainbow_target) ? balResponse.data.rainbow_target : null;
 
-        let digit1, digit2, digit3, booster, finalStatus, totalMultiplier;
-        let isLoopActive = true;
-        let loopSafety = 0;
+        let digit1 = 0, digit2 = 0, digit3 = 0;
+        let booster = "X2";
+        let totalMultiplier = 0;
+        
+        // 🎯 জিলির অফিশিয়াল উইন রেশিও ও গ্লোবাল ক্যাসিনো আরটিপি লুপ নিখুঁত ৯৫% এ টাইট লক!
+        let isWinRound = Math.random() <= 0.32; // ৩২% চান্সে প্লেয়ার রিয়াল উইন পাবে, বাকি ৬৮% পিওর লস ট্র্যাপ!
+        const boosterOptions = ["X2", "FREE SPIN", "X5", "JOKER", "X10"];
+        booster = boosterOptions[Math.floor(Math.random() * boosterOptions.length)];
 
-        // 🎰 [🔒 ওস্তাদ! জিলির অফিশিয়াল ৩+১ স্লট আরএনজি ম্যাট্রিক্স ও ৯৫% RTP গাণিতিক লুপ লক 🔒]
-        while (isLoopActive && loopSafety < 200) {
-            loopSafety++;
-            
-            // জিলির ওরিজিনাল ৩টি মেইন রিল এবং ৪ নম্বর স্পেশাল বুস্টার উইন রিল পুল ম্যাপিং ভাই ভাই!
-            const reel1Options =[0,1,5,10];
-            const reel2Options = [0, "00", 1, 5];
-            const reel3Options =[0,1,5,0];
-            const boosterOptions = ["X2", "FREE SPIN", "X5", "JOKER", "X10"];
-
-            digit1 = reel1Options[Math.floor(Math.random() * reel1Options.length)];
-            digit2 = reel2Options[Math.floor(Math.random() * reel2Options.length)];
-            digit3 = reel3Options[Math.floor(Math.random() * reel3Options.length)];
-            booster = boosterOptions[Math.floor(Math.random() * boosterOptions.length)];
-
-            // ৩টি রিলের মান জোড়া লাগিয়ে মেইন উইন বেইজ ভ্যালু বের করার মেকানিজম ভাই ভাই
-            let baseWinString = String(digit1) + (String(digit2) === "00" ? "00" : String(digit2)) + String(digit3);
-            let baseWinValue = parseInt(baseWinString) || 0;
-
-            // বুস্টার মাল্টিপ্লায়ার ওডস ফ্যাক্টর প্রোটোকল
-            totalMultiplier = 0;
-            if (baseWinValue > 0) {
-                let finalMultiplier = 1;
-                if (booster === "X2") finalMultiplier = 2;
-                if (booster === "X5") finalMultiplier = 5;
-                if (booster === "X10") finalMultiplier = 10;
-                if (booster === "JOKER") finalMultiplier = 15; // জোকার সরাসরি ১৫ গুণ!
-                if (booster === "FREE SPIN") finalMultiplier = 3;  // ফ্রি স্পিন সরাসরি ৩ গুণ!
-                
-                // ওরিজিনাল টাকার অঙ্কের সাথে বুস্টার গুণ হয়ে মাল্টিপ্লায়ার তৈরি লক!
-                totalMultiplier = (baseWinValue * finalMultiplier) / 10; // রেশিও ব্যালেন্স সুষম ডিস্ট্রিবিউশন
-            }
-
-            if (totalMultiplier > 0) {
-                finalStatus = "win";
-            } else {
-                finalStatus = "lose";
-            }
-
-            // 🎯 [🎰 আপনার রেনবো গেমের অবিকল ৯৫% ক্যাসিনো RTP কঠোর নিয়ন্ত্রণ বর্ম ভাই ভাই]
-            if (adminTriggeredPrize) {
-                if (adminTriggeredPrize === "force_lose" && finalStatus === "lose") isLoopActive = false;
-                if (adminTriggeredPrize === "force_win" && finalStatus === "win") isLoopActive = false;
-            } else {
-                // হাই-জ্যাকপটের চান্স আরটিপি লুপ ট্র্যাকে স্বাভাবিক নিয়মে ২% ব্যালেন্সড লক ভাই
-                if (totalMultiplier >= 25 && Math.random() > 0.02) continue;
-
-                if (finalStatus === "win") {
-                    // জিলির উইন রেশিও ও গ্লোবাল ক্যাসিনো আরটিপি লুপ নিখুঁত ৯৫% এ টাইট লক ভাই ভাই
-                    if (Math.random() <= 0.32) {
-                        isLoopActive = false;
-                    }
-                } else {
-                    isLoopActive = false; 
-                }
-            }
+        if (adminTriggeredPrize) {
+            if (adminTriggeredPrize === "force_win") isWinRound = true;
+            if (adminTriggeredPrize === "force_lose") isWinRound = false;
         }
 
+        if (isWinRound) {
+            // 🏆 উইন রাউন্ডের জন্য জিলির খাঁটি লাকি সংখ্যা কম্বিনেশন জেনারেটর (বামে সংখ্যা থাকবেই)
+            const winReel1 =;
+            const winReel2 = [0, "00", 1, 5];
+            const winReel3 =;
+
+            digit1 = winReel1[Math.floor(Math.random() * winReel1.length)];
+            digit2 = winReel2[Math.floor(Math.random() * winReel2.length)];
+            digit3 = winReel3[Math.floor(Math.random() * winReel3.length)];
+
+            // 🚨 [অরিজিনাল জিলি লজিক]: ৩টি রিল পাশাপাশি বসে (String Concatenation) পিওর বেস ভ্যালু তৈরি করবে!
+            let d1Str = String(digit1);
+            let d2Str = String(digit2);
+            let d3Str = String(digit3);
+            
+            let baseWinString = d1Str + (d2Str === "00" ? "00" : d2Str) + d3Str;
+            let baseWinValue = parseInt(baseWinString) || 0;
+
+            // ডানের ৪ নম্বর স্পেশাল বুস্টার রিল ওডস মাল্টিপ্লায়ার ফ্যাক্টর সিঙ্ক
+            let finalMultiplier = 1;
+            if (booster === "X2") finalMultiplier = 2;
+            if (booster === "X5") finalMultiplier = 5;
+            if (booster === "X10") finalMultiplier = 10;
+            if (booster === "JOKER") finalMultiplier = 15; // জোকার সরাসরি ১৫ গুণ!
+            if (booster === "FREE SPIN") finalMultiplier = 3;  // ফ্রি স্পিন বোনাসে ৩ গুণ!
+
+            // মেইন সাইটের রেনবো এপিআই রেসপন্সের সাথে গুণফল ওডস রেশিও ডিস্ট্রিবিউশন সামঞ্জস্য করা
+            let calculatedWin = baseWinValue * finalMultiplier;
+            totalMultiplier = calculatedWin / 10; // সুষম আরটিপি ওডস কন্ট্রোল
+
+            // জ্যাকпот এমাউন্ট প্রোটেকশন ফিল্টার বর্ম
+            if (totalMultiplier >= 25 && !adminTriggeredPrize && Math.random() > 0.05) {
+                digit1 = 1; digit2 = 0; digit3 = 0; // সরাসরি ১০ বেইজ
+                totalMultiplier = (10 * finalMultiplier) / 10;
+            }
+        } else {
+            // 💀 লস রাউন্ডের জন্য পিওর জিলি লস ট্র্যাপ কম্বিনেশন (বামে শূন্য বা খালি ঘর এসে বাজি ভ্যানিশ করবে!)
+            const loseReel1 =;
+            const loseReel2 = [0, "00", 1];
+            const loseReel3 =;
+
+            digit1 = loseReel1[Math.floor(Math.random() * loseReel1.length)];
+            digit2 = loseReel2[Math.floor(Math.random() * loseReel2.length)];
+            digit3 = loseReel3[Math.floor(Math.random() * loseReel3.length)];
+            
+            totalMultiplier = 0; // পিওর জিরো লস!
+        }
+
+        let finalStatus = totalMultiplier > 0 ? "win" : "lose";
         let winAmount = 0;
         let dbAction = "bet";
         let dbAmount = reqAmount;
@@ -213,3 +214,4 @@ const PORT = process.env.PORT || 9999;
 server.listen(PORT, () => {
     console.log(`🎰 VIP JILI Money Coming Casino Engine Running on port 9999`);
 });
+                          
