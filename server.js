@@ -107,9 +107,9 @@ app.post('/api/jili-bet', async (req, res) => {
 
         if (isWinRound) {
             // 🏆 উইন রাউন্ডের জন্য জিলির খাঁটি লাকি সংখ্যা কম্বিনেশন জেনারেটর (বামে সংখ্যা থাকবেই)
-            const winReel1 =;
+            const winReel1 =[0,1];
             const winReel2 = [0, "00", 1, 5];
-            const winReel3 =;
+            const winReel3 =[0,5];
 
             digit1 = winReel1[Math.floor(Math.random() * winReel1.length)];
             digit2 = winReel2[Math.floor(Math.random() * winReel2.length)];
