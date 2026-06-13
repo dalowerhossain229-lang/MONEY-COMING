@@ -63,9 +63,9 @@ app.post('/api/jili-bet', async (req, res) => {
         if (response.data && response.data.status === "ok") {
             
             // 🎰 জিলির অফিশিয়াল ৩+১ স্লট আরএনজি (RNG) ম্যাট্রিক্স অ্যালগরিদম সচল লক ওস্তাদ!
-            const reel1Options =;
+            const reel1Options =[0,1,5,10];
             const reel2Options = [0, "00", 1, 5];
-            const reel3Options =;
+            const reel3Options =[0,1,5,0];
             const boosterOptions = ["X2", "FREE SPIN", "X5", "JOKER", "X10"];
 
             let digit1 = reel1Options[Math.floor(Math.random() * reel1Options.length)];
