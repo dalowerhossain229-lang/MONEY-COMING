@@ -111,32 +111,45 @@
     const urlUserId = urlParams.get('userId') || urlParams.get('id') || urlParams.get('username') || "guest_user";
     const urlWallet = urlParams.get('wallet') || "main";
 
-    // 🚀 [🔒 গেম এরিনায় প্রবেশ করার ১ মিলি-সেকেন্ডে মেইন ব্যালেন্স ওতো-টেনে লোড করার জাদুকরী কিংস ড্রাইভার লক 🔒]
-    async function loadPlatformLiveBalanceSync() {
+    // 🚀 [🔒 ওস্তাদ! অন্য গেমের অবিকল ১০০% সচল ওরিজিনাল ব্যালেন্স ড্রাইভার প্রোটোকল লক 🔒]
+    async function fetchLiveBalance() {
         try {
-            // 🎯 ইউজারনেম প্যারামিটার ট্র্যাপ বাইপাস করতে ডাইনামিক সিঙ্ক মেকার ভাই ভাই
-            let targetUser = urlUserId;
-            if (!targetUser || targetUser === "guest_user") {
-                // অল্টারনেট প্যারামিটার ব্যাকআপ চেকিং ভাই ভাই
-                targetUser = urlParams.get('username') || urlParams.get('id') || "guest_user";
-            }
-
-            const res = await fetch(`${SERVER_URL}/api/jili-balance?userId=${targetUser}&wallet=${urlWallet}`);
-            const data = await res.json();
-            
+            const response = await fetch(`${SERVER_URL}/api/rainbow-balance?userId=${urlUserId}&wallet=${urlWallet}`);
+            const data = await response.json();
             if (data && data.success) {
                 livePlatformBalance = parseFloat(data.balance);
                 
-                // আপনার স্ক্রিনশটের অবিকল গোল্ডেন ওয়ালেট বক্সে টাকা লাইভ ওতো-লোড ফায়ার ভাই!
-                const balanceDisplayNode = document.getElementById("jili-wallet-balance");
-                if (balanceDisplayNode) {
-                    balanceDisplayNode.innerText = livePlatformBalance.toLocaleString('en-US', {minimumFractionDigits: 2});
+                // জিলির ভেতরের গোল্ডেন ওয়ালেট বক্সে টাকা ওতো-লোড ফায়ার ভাই ভাই!
+                const balanceDisplay = document.getElementById("user-balance");
+                if (balanceDisplay) {
+                    balanceDisplay.innerText = livePlatformBalance.toFixed(2);
                 }
             }
-        } catch(e) {
-            console.error("Front-end Balance Sync Error:", e);
+        } catch (e) { 
+            console.error("Balance fetch delay"); 
         }
     }
+
+    // সকেট লাইভ অ্যাকাউন্ট রিফ্রেশার সিঙ্ক পাইপ (ব্যালেন্স আপডেট হলে ওতো-টেনে আনবে ভাই)
+    if (typeof io !== 'undefined') {
+        const socket = io(SERVER_URL);
+        socket.on('balanceUpdate', (data) => {
+            if (data && data.username === urlUserId) {
+                livePlatformBalance = parseFloat(data.balance);
+                const balanceDisplay = document.getElementById("user-balance");
+                if (balanceDisplay) balanceDisplay.innerText = livePlatformBalance.toFixed(2);
+            }
+        });
+    }
+
+    window.onload = () => {
+        if (window.parent) window.parent.postMessage({ action: "refresh_wallet" }, "*");
+        fetchLiveBalance();
+        // ব্যাকআপ সিঙ্ক ট্র্যাকার ২ বার ওতো-রিফ্রেশ ফায়ার ওস্তাদ!
+        setTimeout(fetchLiveBalance, 400);
+        setTimeout(fetchLiveBalance, 900);
+    };
+
 
     function adjustJiliBet(action) {
         if (isReelsSpinning) return;
