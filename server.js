@@ -21,19 +21,31 @@ app.use(express.static(path.join(__dirname, './')));
 // 🎰 আপনার ওরিজিনাল মেইন সাইটের ডাটাবেজ ব্যাকএন্ড লিঙ্ক
 const MAIN_SITE_URL = "https://betlover247.onrender.com"; 
 
-// 💰 ১. লাইভ অ্যাকাউন্ট ব্যালেন্স নিয়ে আসার ডেডিকেটেড এপিআই গেটওয়ে (GET Route)
+// 💰 [🔒 ওস্তাদ! মেইন পিএইচপি ডাটাবেজ থেকে ওয়ালেট ব্যালেন্স এক টানে গেমের ভেতর নিয়ে আসার মেগা কিংস রাউট লক 🔒]
 app.get('/api/jili-balance', async (req, res) => {
-    const { userId, wallet } = req.query;
+    // ফ্রন্টএন্ড থেকে আসা ইউজার আইডি এবং ওয়ালেট টাইপ রিসিভ ভাই ভাই
+    const userId = req.query.userId || req.query.username || req.query.id;
+    const wallet = req.query.wallet || "main";
+    
+    // আপনার ওরিজিনাল মেইন সাইটের ডাটাবেজ ব্যাকএন্ড লিঙ্ক
+    const MAIN_SITE_URL = "https://onrender.com";
+
     try {
-        const response = await axios.get(`${MAIN_SITE_URL}/api_callback.php?action=get_balance&username=${userId}&wallet=${wallet}`, { timeout: 10000 });
+        // 🎯 ওস্তাদ! কিলার ফিক্স—আপনার পিএইচপি callback ইঞ্জিনের রিয়াল প্যারামিটার 'username' কাঁটায় কাঁটায় সিঙ্ক করা হলো!
+        const response = await axios.get(`${MAIN_SITE_URL}/api_callback.php?action=get_balance&username=${userId}&wallet=${wallet}`, { timeout: 12000 });
+        
         if (response.data && response.data.status === "ok") {
-            return res.json({ success: true, balance: response.data.balance });
+            return res.json({ success: true, balance: parseFloat(response.data.balance) });
+        } else if (response.data && response.data.balance !== undefined) {
+            return res.json({ success: true, balance: parseFloat(response.data.balance) });
         }
-        return res.json({ success: false, balance: 0 });
+        return res.json({ success: false, balance: 0.00 });
     } catch (e) {
-        return res.json({ success: false, balance: 0 });
+        console.error("JILI Money Balance Core Database Fetch Error:", e.message);
+        return res.json({ success: false, balance: 0.00 });
     }
 });
+
 
 // 🛫 ২. জিলি মানি স্পিন ব্যালেন্স কাটার ও ওতো-রেজাল্ট জেনারেশন মেগা এপিআই রাউট (POST Route)
 app.post('/api/jili-bet', async (req, res) => {
