@@ -45,25 +45,24 @@ app.get('/api/chicken-balance', async (req, res) => {
     }
 });
 
-// 🛫 [🔒 ওস্তাদ! চিকেন রোডের ওরিজিনাল 'chicken-bet' বাজি কাটার এক্সপ্রেস রাউট ব্যাকএন্ডে টাইট লক 🔒]
+// 🛫 [🔒 ওস্তাদ! রেন্ডার স্ক্রিনশটের অফিশিয়াল নাম 'money-coming' মিলিয়ে টাকা কাটার চূড়ান্ত কিংস গেটওয়ে লক 🔒]
 app.post('/api/chicken-bet', async (req, res) => {
     const { userId, amount, wallet } = req.body;
     const betAmount = parseFloat(amount);
 
     try {
-        // সরাসরি আপনার পিএইচপি গেটওয়েতে হিট করে ওয়ালেট থেকে টাকা কাটা হচ্ছে ভাই ভাই
+        // 🎯 ওস্তাদ! কিলার ফিক্স—আপনার রেন্ডার সার্ভারের ওরিজিনাল লাইভ নাম 'money-coming' ডাটাবেজ গেটওয়েতে কড়া লক করা হলো!
         const response = await axios.post(MAIN_SITE_URL + '/api_callback.php', { 
             action: "bet", 
             username: userId, 
             amount: betAmount, 
             wallet: wallet,
-            game: "jili_money"
+            game: "money-coming" // 👈 ওস্তাদ! স্ক্রিনশটের অবিকল অফিশিয়াল জেনুইন স্লাগ নাম ১০০% কড়া লক ভাই ভাই!
         }, { timeout: 15000 });
 
         if (response.data && response.data.status === "ok") {
             
-            // 🎰 [🔒 ওস্তাদ! জিলির অফিশিয়াল ৩+১ স্লট আরএনজি (RNG) ম্যাট্রিক্স অ্যালগরিদম লক 🔒]
-            // রিল ১, ২, ৩ এবং ডানের ৪ নম্বর মেগা বুস্টার উইন রিল পুল কড়া সচল লক ভাই ভাই!
+            // 🎰 জিলির অফিশিয়াল ৩+১ স্লট আরএনজি (RNG) ম্যাট্রিক্স অ্যালগরিদম সচল লক ওস্তাদ!
             const reel1Options =;
             const reel2Options = [0, "00", 1, 5];
             const reel3Options =;
@@ -74,24 +73,20 @@ app.post('/api/chicken-bet', async (req, res) => {
             let digit3 = reel3Options[Math.floor(Math.random() * reel3Options.length)];
             let booster = boosterOptions[Math.floor(Math.random() * boosterOptions.length)];
 
-            // ওস্তাদ! ৩টি রিলের মান জোড়া লাগিয়ে মেইন উইন বেইজ ভ্যালু বের করার কিংস মেকানিজম!
             let d1Str = String(digit1);
             let d2Str = String(digit2);
             let d3Str = String(digit3);
             
-            // যদি ডবল জিরো '00' পড়ে তবে আগের অঙ্কের পাশে দুইটা শূন্য বসে চেইন তৈরি হবে ভাই ভাই!
             let baseWinString = d1Str + (d2Str === "00" ? "00" : d2Str) + d3Str;
             let baseWinValue = parseInt(baseWinString) || 0;
 
-            // বুস্টার মাল্টিপ্লায়ার ফ্যাক্টর প্রোটোকল ম্যাপিং
             let finalMultiplier = 1;
             if (booster === "X2") finalMultiplier = 2;
             if (booster === "X5") finalMultiplier = 5;
             if (booster === "X10") finalMultiplier = 10;
-            if (booster === "JOKER") finalMultiplier = 15; // জোকার টিকিটে সরাসরি ১৫ গুণ ধামাকা!
-            if (booster === "FREE SPIN") finalMultiplier = 3;  // ফ্রি স্পিন বোনাসে বেসিক ৩ গুণ ভাই ভাই!
+            if (booster === "JOKER") finalMultiplier = 15; 
+            if (booster === "FREE SPIN") finalMultiplier = 3;  
 
-            // চূড়ান্ত জ্যাকপট লাভ ক্যাসিনো ক্যালকুলেটর লক ওস্তাদ!
             let totalWinCash = baseWinValue > 0 ? (baseWinValue * finalMultiplier) : 0;
 
             // 🎰 প্লেয়ার উইন হলে তার ওরিজনাল ওয়ালেটে প্লাস করার জন্য মেগা অবজেক্ট হিট লক ভাই!
@@ -104,7 +99,7 @@ app.post('/api/chicken-bet', async (req, res) => {
                         bet_amount: betAmount,
                         multiplier: finalMultiplier.toFixed(2),
                         status: "win",
-                        game: "jili_money",
+                        game: "money-coming", // 👈 উইন হলেও অফিশিয়াল স্লাগ নামে টাকা ওয়ান-শটে প্লাস লক ভাই!
                         wallet: wallet
                     }, { timeout: 15000 });
                 } catch (winErr) {
@@ -115,7 +110,6 @@ app.post('/api/chicken-bet', async (req, res) => {
             // সকেটের মেইন পাইপলাইনে তাজা ব্যালেন্স ব্রডকাস্ট ফায়ার ভাই ভাই
             io.emit("balanceUpdate", { username: userId, balance: response.data.balance });
 
-            // ফ্রন্টঅ্যান্ড রিলে সুনির্দিষ্ট ঘর থামাতে এবং উইন পপআপ ট্র্যাকিং নিখুঁত রেসপন্স রিটার্ন!
             return res.json({ 
                 success: true, 
                 balance: response.data.balance,
