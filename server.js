@@ -132,7 +132,7 @@ io.on('connection', (socket) => {
 });
 
 // 🌐 [🔒 ওস্তাদ! রেন্ডার হোস্টিং এবং টার্মাক্সের জন্য পোর্ট ৯৯৯৯ কড়া কিংস বর্ম লক ফায়ার 🔒]
-const PORT = process.env.PORT || 9999;
+const PORT = process.env.PORT || 34000;
 server.listen(PORT, () => {
     console.log(`🎰 VIP JILI Money Coming Casino Engine Running on port 9999`);
 });
