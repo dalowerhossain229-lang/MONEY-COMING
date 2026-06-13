@@ -107,9 +107,9 @@ app.post('/api/jili-bet', async (req, res) => {
 
         if (isWinRound) {
             // 🏆 উইন রাউন্ডের জন্য জিলির খাঁটি লাকি সংখ্যা কম্বিনেশন জেনারেটর (বামে সংখ্যা থাকবেই)
-            const winReel1 =[0,1];
+            const winReel1 =[1,5,10,50];
             const winReel2 = [0, "00", 1, 5];
-            const winReel3 =[0,5];
+            const winReel3 =[1,5,10,0];
 
             digit1 = winReel1[Math.floor(Math.random() * winReel1.length)];
             digit2 = winReel2[Math.floor(Math.random() * winReel2.length)];
@@ -142,9 +142,9 @@ app.post('/api/jili-bet', async (req, res) => {
             }
         } else {
             // 💀 লস রাউন্ডের জন্য পিওর জিলি লস ট্র্যাপ কম্বিনেশন (বামে শূন্য বা খালি ঘর এসে বাজি ভ্যানিশ করবে!)
-            const loseReel1 =;
+            const loseReel1 =[0,1,5,];
             const loseReel2 = [0, "00", 1];
-            const loseReel3 =;
+            const loseReel3 =[0,1,0,5,0];
 
             digit1 = loseReel1[Math.floor(Math.random() * loseReel1.length)];
             digit2 = loseReel2[Math.floor(Math.random() * loseReel2.length)];
