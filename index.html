@@ -112,27 +112,28 @@
         4: ["X2", "FREE SPIN", "X5", "JOKER", "X10", "X2", "X5", "X10", "JOKER", "FREE SPIN"]
     };
 
-    // রিলগুলোর মেমোরি ক্যানভাস ডাইনামিক রেন্ডারার ফাংশন ভাই ভাই
-    function generateJiliDynamicReelStrips() {
+    function generateJiliOrganicReels() {
+        const reelDataPools = {
+            1:[0,1,5,10,50,0,1,5,10,50],
+            2: [0, "00", 1, 5, 0, "00", 1, 5],
+            3:[0,1,5,10,0,1,5,10],
+            4: ["X2", "FREE SPIN", "X5", "JOKER", "X10", "X2", "FREE SPIN", "X5", "JOKER", "X10"]
+        };
+
         for (let i = 1; i <= 4; i++) {
             const stripNode = document.getElementById(`reel-${i}`);
             if (stripNode) {
-                stripNode.innerHTML = "";
-                // প্রতিটি রিল স্ট্রিপকে ২৪টি সেলের মেগা মেমরিতে লুপ করে বড় করা হলো, যাতে ঘুরলে সব সংখ্যা র্যান্ডম দেখায়!
-                const pool = reelDataPools[i];
                 let fullHTML = "";
+                let pool = reelDataPools[i];
                 
-                // ওরিজিনাল থ্রিডি লুপ ফোর্সার ভাই ভাই
-                for (let loop = 0; loop < 3; loop++) {
-                    pool.forEach(val => {
-                        let extraClass = "";
-                        if (String(val).includes("X")) extraClass = "multiplier-cell";
-                        if (String(val).includes("FREE")) extraClass = "free-spin-cell";
-                        if (String(val).includes("JOKER")) extraClass = "joker-cell";
-                        
-                        fullHTML += `<div class="reel-cell ${extraClass}">${val}</div>`;
-                    });
-                }
+                pool.forEach(val => {
+                    let extraClass = "";
+                    if (String(val).includes("X")) extraClass = "multiplier-cell";
+                    if (String(val).includes("FREE")) extraClass = "free-spin-cell";
+                    if (String(val).includes("JOKER")) extraClass = "joker-cell";
+                    
+                    fullHTML += `<div class="reel-cell ${extraClass}">${val}</div>`;
+                });
                 stripNode.innerHTML = fullHTML;
             }
         }
