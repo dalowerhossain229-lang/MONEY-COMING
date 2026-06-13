@@ -26,7 +26,7 @@ app.use((req, res, next) => {
 });
 
 // 🎰 [উইনগো কালার ট্রেড ওরিজিনাল ডোমেইন সিঙ্ক]
-const MAIN_SITE_URL = "https://onrender.com"; 
+const MAIN_SITE_URL = "https://betlover247.onrender.com"; 
 
 // ৭টি ওরিজিনাল রেনবো ফ্রুট স্লট পুল তালিকা ভাই ভাই
 const slotSymbolsPool = ["CHERRY", "LEMON", "ORANGE", "PLUM", "GRAPE", "WATERMELON", "BAR"];
