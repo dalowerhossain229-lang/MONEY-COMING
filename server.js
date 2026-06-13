@@ -107,9 +107,9 @@ app.post('/api/jili-bet', async (req, res) => {
 
         if (isWinRound) {
             // 🏆 [🔒 ওস্তাদ! সবসময় একই সংখ্যা ট্র্যাপ উপড়ে ফেলে জিলির অরিজিনাল র্যান্ডম লাকি টাকার ভ্যালু পুল লক 🔒]
-            const winReel1 =;  // রিল ১ এ এই ৫টি লাকি টাকার ভ্যালু লক!
+            const winReel1 =[1,5,10,50];  // রিল ১ এ এই ৫টি লাকি টাকার ভ্যালু লক!
             const winReel2 = [0, "00", 1, 5];    
-            const winReel3 =;      // রিল ৩ এ এই ৪টি লাকি বুস্টার ভ্যালু লক!
+            const winReel3 =[1,5,10,0];      // রিল ৩ এ এই ৪টি লাকি বুস্টার ভ্যালু লক!
 
             digit1 = winReel1[Math.floor(Math.random() * winReel1.length)];
             digit2 = winReel2[Math.floor(Math.random() * winReel2.length)];
@@ -140,9 +140,9 @@ app.post('/api/jili-bet', async (req, res) => {
             }
         } else {
             // 💀 [🔒 লস রাউন্ডের ফাঁকা ব্র্যাকেট ট্র্যাপ চিরতরে উপড়ে ১০০% একুরেট লস কম্বিনেশন লক 🔒]
-            const loseReel1 =; // রিল ১ লস ভ্যালু লক
+            const loseReel1 =[0,1]; // রিল ১ লস ভ্যালু লক
             const loseReel2 = [0, "00", 1];
-            const loseReel3 =; // রিল ৩ লস ভ্যালু লক
+            const loseReel3 =[0,5]; // রিল ৩ লস ভ্যালু লক
 
             digit1 = loseReel1[Math.floor(Math.random() * loseReel1.length)];
             digit2 = loseReel2[Math.floor(Math.random() * loseReel2.length)];
